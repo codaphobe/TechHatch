@@ -24,9 +24,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
-
     @Autowired
     private ApplicationContext context;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -41,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if(email!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            UserDetails userDetails = context.getBean(CustomUserDetailsService.class).loadUserByUsername(email);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
             if (jwtUtil.validateToken(token, userDetails)){
                 String role = userDetails.getAuthorities().toString();
                 SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
