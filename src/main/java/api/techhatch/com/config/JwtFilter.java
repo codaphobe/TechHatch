@@ -43,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if(email!=null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = context.getBean(CustomUserDetailsService.class).loadUserByUsername(email);
             if (jwtUtil.validateToken(token, userDetails)){
-                String role = jwtUtil.getRoleFromToken(token);
+                String role = userDetails.getAuthorities().toString();
                 SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singleton(authority));
