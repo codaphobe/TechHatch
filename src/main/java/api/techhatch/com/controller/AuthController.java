@@ -1,13 +1,14 @@
 package api.techhatch.com.controller;
 
+import api.techhatch.com.dto.request.LoginRequest;
 import api.techhatch.com.dto.request.RegisterRequest;
 import api.techhatch.com.dto.response.AuthResponse;
-import api.techhatch.com.model.User;
+import api.techhatch.com.dto.response.RegisterResponse;
+import api.techhatch.com.model.Users;
 import api.techhatch.com.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -29,20 +30,29 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> registerUser(@RequestBody @Valid RegisterRequest request){
+    public ResponseEntity<RegisterResponse> registerUser(@RequestBody @Valid RegisterRequest request){
         try{
-            AuthResponse response = service.register(request);
+            RegisterResponse response = service.register(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }catch (RuntimeException e){
-            AuthResponse errorResponse = AuthResponse.builder()
+            RegisterResponse errorResponse = RegisterResponse.builder()
                     .message(e.getMessage())
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 
-    @GetMapping("/getAllUsers")
-    public List<User> getAllUsers(){
-        return service.getAllUsers();
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> loginUser(@RequestBody @Valid LoginRequest request){
+        try{
+            AuthResponse response = service.login(request);
+            return ResponseEntity.ok(response);
+        }catch (RuntimeException e){
+            AuthResponse errorResponse = AuthResponse.builder()
+                    .message(e.getMessage())
+                    .build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
     }
 }
