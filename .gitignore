@@ -21,3 +21,5 @@ target/
 
 ### Plan folders ###
 /Planning/
+!/src/main/java/api/techhatch/com/GenerateSecret.java
+
