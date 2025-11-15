@@ -1,5 +1,6 @@
 package api.techhatch.com;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,6 +33,10 @@ public class TechhatchApplication {
 		SpringApplication.run(TechhatchApplication.class, args);
 	}
 
+    @Bean
+    public ObjectMapper objectMapper(){
+        return new ObjectMapper();
+    }
 
     @Bean
     public ApplicationRunner testBeans(ApplicationContext ctx) {
