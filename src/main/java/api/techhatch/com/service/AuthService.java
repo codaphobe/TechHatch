@@ -91,8 +91,8 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(token)
                 .email(request.getEmail())
-                .role(Role.valueOf("CANDIDATE").toString())
-                .userId(1L)
+                .role(user.getRole().toString())
+                .userId(user.getId())
                 .message("Users Logged in Successfully")
                 .build();
 
