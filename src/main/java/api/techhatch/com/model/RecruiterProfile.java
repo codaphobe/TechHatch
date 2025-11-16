@@ -19,7 +19,7 @@ public class RecruiterProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
-    @Column(name = "user_id", unique = true, nullable = false)
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
     private Users user;
     @Column(name = "company_name" ,nullable = false)
     private String companyName;
@@ -30,7 +30,6 @@ public class RecruiterProfile {
     private String phone;
     @Column(name = "website")
     private String companyWebsite;
-    @Enumerated(EnumType.STRING)
     @Column(name = "company_size", nullable = false)
     private String companySize;
     @Column(nullable = false)
