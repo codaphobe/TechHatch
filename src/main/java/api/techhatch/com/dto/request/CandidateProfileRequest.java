@@ -1,6 +1,8 @@
 package api.techhatch.com.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import java.util.List;
@@ -13,12 +15,17 @@ public class CandidateProfileRequest {
     private String fullName;
 
     private String phone;
-    @NotBlank(message = "Skills are required")
-    private List<String> skills;  // ["Java", "Spring Boot", "React"]
+
+    @NotEmpty(message = "Skills are required")
+    private List<@NotBlank String> skills;  // ["Java", "Spring Boot", "React"]
 
     private Integer experienceYears;
     @NotBlank(message = "Education details are required")
     private String education;
+
+    private String resumeUrl;
+
+    private String profilePictureUrl;
 
     private String bio;
 

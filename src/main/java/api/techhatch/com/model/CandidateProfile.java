@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "candidate_profile")
+@Table(name = "candidate_profiles")
 @Getter
 @Setter
 @NoArgsConstructor

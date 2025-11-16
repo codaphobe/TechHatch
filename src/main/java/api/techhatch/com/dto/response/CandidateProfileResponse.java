@@ -24,4 +24,5 @@ public class CandidateProfileResponse {
     private String portfolioUrl;
     private String location;
     private Boolean isProfileComplete;
+    private String message;
 }

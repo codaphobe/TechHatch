@@ -21,7 +21,6 @@ public class JwtUtil {
     private Long EXPIRATION_TIME;
 
     public String generateToken(String email, String role, Long userId){
-        System.out.println("Generating token");
         return Jwts.builder()
                 .subject(email)
                 .claim("role",role)
