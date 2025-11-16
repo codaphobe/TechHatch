@@ -4,17 +4,12 @@ import api.techhatch.com.dto.request.LoginRequest;
 import api.techhatch.com.dto.request.RegisterRequest;
 import api.techhatch.com.dto.response.AuthResponse;
 import api.techhatch.com.dto.response.RegisterResponse;
-import api.techhatch.com.model.Users;
 import api.techhatch.com.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -23,11 +18,6 @@ import java.util.List;
 public class AuthController {
 
     private final AuthService service;
-
-    @GetMapping("/csrf-token")
-    public CsrfToken getToken(HttpServletRequest request){
-        return (CsrfToken) request.getAttribute("_csrf");
-    }
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> registerUser(@RequestBody @Valid RegisterRequest request){
@@ -41,7 +31,6 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> loginUser(@RequestBody @Valid LoginRequest request){
