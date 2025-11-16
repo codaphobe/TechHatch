@@ -14,9 +14,10 @@ public class RecruiterProfileResponse {
     private String companyDescription;
     private String companyLogoUrl;
     private String phone;
-    private String website;
+    private String companyWebsite;
     private String companySize;
     private String industry;
     private String location;
     private Boolean isProfileComplete;
+    private String message;
 }

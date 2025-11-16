@@ -16,7 +16,10 @@ public class RecruiterProfileRequest {
 
     private String phone;
 
-    private String website;
+    private String companyLogoUrl;
+
+    private String companyWebsite;
+
     @NotBlank(message = "Please select company size")
     private String companySize;  // "1-10", "11-50", etc.
 
