@@ -1,6 +1,6 @@
 package api.techhatch.com.controller;
 
-import api.techhatch.com.dto.request.JobRequest;
+import api.techhatch.com.dto.request.JobCreateRequest;
 import api.techhatch.com.dto.request.JobSearchFilter;
 import api.techhatch.com.dto.response.JobResponse;
 import api.techhatch.com.model.UserPrinciple;
@@ -30,7 +30,7 @@ public class JobController {
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<JobResponse> postJob(
             @AuthenticationPrincipal String email,
-            @Valid @RequestBody JobRequest request) {
+            @Valid @RequestBody JobCreateRequest request) {
 
         JobResponse response = jobService.postJob(email, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -94,7 +94,7 @@ public class JobController {
     public ResponseEntity<JobResponse> updateJob(
             @AuthenticationPrincipal UserPrinciple userPrinciple,
             @PathVariable Long id,
-            @Valid @RequestBody JobRequest request) {
+            @Valid @RequestBody JobCreateRequest request) {
 
         String email = userPrinciple.getUsername();
         JobResponse response = jobService.updateJob(email, id, request);

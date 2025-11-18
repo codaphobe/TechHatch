@@ -9,23 +9,26 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Repository
 public interface JobRepo extends JpaRepository<Job, Long> {
 
-    Page<Job> findByStatus(Job.JobStatus status, Pageable pageable);
+    Page<Job> findByJobStatus(Job.JobStatus status, Pageable pageable);
 
     Page<Job> findByRecruiterProfileId(Long recruiterId, Pageable pageable);
 
     @Query("SELECT j FROM Job j WHERE " +
-            "j.status = 'ACTIVE' AND " +
+            "j.jobStatus = 'ACTIVE' AND " +
             "(:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "    OR LOWER(j.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
             "(:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%'))) AND " +
             "(:jobType IS NULL OR j.jobType = :jobType) AND " +
-            "(:experienceLevel IS NULL OR j.experienceLevel = :experienceLevel) AND " +
+            "(:experienceLevel IS NULL OR j.expLevel = :experienceLevel) AND " +
             "(:minSalary IS NULL OR j.salaryMax >= :minSalary) AND " +
-            "(:maxSalary IS NULL OR j.salaryMin <= :maxSalary)")
+            "(:maxSalary IS NULL OR j.salaryMin <= :maxSalary) AND " +
+            "(:fromDate IS NULL OR j.postedDate >= :fromDate) AND " +
+            "(:toDate IS NULL OR j.postedDate <= :toDate)")
     Page<Job> searchJobs(
             @Param("keyword") String keyword,
             @Param("location") String location,
@@ -33,6 +36,8 @@ public interface JobRepo extends JpaRepository<Job, Long> {
             @Param("experienceLevel") Job.ExperienceLevel experienceLevel,
             @Param("minSalary") BigDecimal minSalary,
             @Param("maxSalary") BigDecimal maxSalary,
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("toDate") LocalDateTime toDate,
             Pageable pageable
     );
 
