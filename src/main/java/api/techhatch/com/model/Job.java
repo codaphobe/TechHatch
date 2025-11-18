@@ -34,8 +34,8 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany
-    @JoinColumn(name = "recruiter_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recruiter_id", nullable = false, updatable = false)
     private RecruiterProfile recruiterProfile;
     private String title;
     private String description;
@@ -57,13 +57,13 @@ public class Job {
     private BigDecimal salaryMax;
     private String currency;
     @Column(name = "required_skills", columnDefinition = "JSON")
-    private String required_skills;
-    @Column(name = "job_status")
+    private String requiredSkills;
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private JobStatus jobStatus=JobStatus.ACTIVE;
     @Column(name = "posted_date", updatable = false, nullable = false)
     private LocalDateTime postedDate;
-    @Column(name = "posted_date", updatable = false)
+    @Column(name = "expiry_date", updatable = false)
     private LocalDateTime expiryDate;
     @Column(name = "view_count")
     private Integer viewCount = 0;
