@@ -18,17 +18,19 @@ public interface JobRepo extends JpaRepository<Job, Long> {
 
     Page<Job> findByRecruiterProfileId(Long recruiterId, Pageable pageable);
 
-    @Query("SELECT j FROM Job j WHERE " +
-            "j.jobStatus = 'ACTIVE' AND " +
-            "(:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "    OR LOWER(j.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
-            "(:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%'))) AND " +
-            "(:jobType IS NULL OR j.jobType = :jobType) AND " +
-            "(:experienceLevel IS NULL OR j.expLevel = :experienceLevel) AND " +
-            "(:minSalary IS NULL OR j.salaryMax >= :minSalary) AND " +
-            "(:maxSalary IS NULL OR j.salaryMin <= :maxSalary) AND " +
-            "(:fromDate IS NULL OR j.postedDate >= :fromDate) AND " +
-            "(:toDate IS NULL OR j.postedDate <= :toDate)")
+    @Query(value = """
+            Select j FROM Job j WHERE
+                        j.jobStatus ='ACTIVE'
+                        AND (:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                            OR LOWER(j.description) LIKE LOWER(CONCAT('%', :keyword, '%')))
+                        AND (:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%')))
+                        AND (:jobType IS NULL OR j.jobType = :jobType)
+                        AND (:experienceLevel IS NULL OR j.expLevel = :experienceLevel)
+                        AND (:minSalary IS NULL OR j.salaryMax >= :minSalary)
+                        AND (:maxSalary IS NULL OR j.salaryMin <= :maxSalary)
+                        AND (:fromDate IS NULL OR j.postedDate >= :fromDate)
+                        AND (:toDate IS NULL OR j.postedDate <= :toDate)
+            """)
     Page<Job> searchJobs(
             @Param("keyword") String keyword,
             @Param("location") String location,
