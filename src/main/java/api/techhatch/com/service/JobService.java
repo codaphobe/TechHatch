@@ -85,8 +85,8 @@ public class JobService {
                 expLevel,
                 filter.getMinSalary(),
                 filter.getMaxSalary(),
-                filter.getDateFrom(),
-                filter.getDateTo(),
+                filter.getFromDate(),
+                filter.getToDate(),
                 pageable
         );
         return jobs.map(this::mapToResponse);
@@ -148,7 +148,7 @@ public class JobService {
         job.setSalaryMin(request.getSalaryMin());
         job.setSalaryMax(request.getSalaryMax());
         job.setRequiredSkills(convertSkillsToJson(request.getRequiredSkills()));
-        job.setExpiryDate(request.getExpiryDate());
+        if (request.getExpiryDate()!=null) job.setExpiryDate(request.getExpiryDate());
 
         Job updated = jobRepo.save(job);
 
@@ -269,8 +269,8 @@ public class JobService {
                 .salaryRange(formatSalaryRange(job.getSalaryMin(), job.getSalaryMax(), job.getCurrency()))
                 .requiredSkills(convertJsonToSkills(job.getRequiredSkills()))
                 .status(job.getJobStatus().toString())
-                .postedDate(job.getPostedDate())
-                .expiryDate(job.getExpiryDate())
+                .postedDate(job.getPostedDate().toString())
+                .expiryDate(job.getExpiryDate().toString())
                 .viewCount(job.getViewCount())
                 .applicationCount(job.getApplicationCount())
                 .company(JobResponse.CompanyInfo.builder()

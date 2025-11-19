@@ -29,8 +29,8 @@ public class JobResponse {
     private String salaryRange;  // Formatted: "8-12 LPA"
     private List<String> requiredSkills;
     private String status;
-    private LocalDateTime postedDate;
-    private LocalDateTime expiryDate;
+    private String postedDate;
+    private String expiryDate;
     private Integer viewCount;
     private Integer applicationCount;
 
