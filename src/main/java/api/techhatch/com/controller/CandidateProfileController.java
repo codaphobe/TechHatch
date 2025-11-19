@@ -58,8 +58,8 @@ public class CandidateProfileController {
      * @param profileId candidate profile id
      * @return candidate profile
      */
-    @GetMapping
-    public ResponseEntity<CandidateProfileResponse> getCandidateProfileById(@RequestParam Long profileId){
+    @GetMapping("/{profileId}")
+    public ResponseEntity<CandidateProfileResponse> getCandidateProfileById(@PathVariable Long profileId){
         try{
             CandidateProfileResponse candidateProfileResponse = candidateService.getProfileById(profileId);
             return ResponseEntity.ok(candidateProfileResponse);

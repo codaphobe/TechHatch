@@ -29,7 +29,7 @@ public class RecruiterProfileController {
      */
     @PostMapping
     @PreAuthorize("hasRole('RECRUITER')")
-    public ResponseEntity<RecruiterProfileResponse> createOrUpdateCandidateProfile(
+    public ResponseEntity<RecruiterProfileResponse> createOrUpdateRecruiterProfile(
             @AuthenticationPrincipal UserPrinciple userPrinciple,
             @Valid @RequestBody RecruiterProfileRequest request){
 
@@ -45,7 +45,7 @@ public class RecruiterProfileController {
      */
     @GetMapping("/me")
     @PreAuthorize("hasRole('RECRUITER')")
-    public ResponseEntity<RecruiterProfileResponse> getMyCandidateProfile(
+    public ResponseEntity<RecruiterProfileResponse> getMyRecruiterProfile(
             @AuthenticationPrincipal UserPrinciple userPrinciple){
         RecruiterProfileResponse candidateProfileResponse = recruiterService.getMyProfile(userPrinciple.getUsername());
 
@@ -57,8 +57,8 @@ public class RecruiterProfileController {
      * @param profileId candidate profile id
      * @return candidate profile
      */
-    @GetMapping
-    public ResponseEntity<RecruiterProfileResponse> getCandidateProfileById(@RequestParam Long profileId){
+    @GetMapping("/{profileId}")
+    public ResponseEntity<RecruiterProfileResponse> getRecruiterProfileById(@PathVariable Long profileId){
         try{
             RecruiterProfileResponse recruiterProfileResponse = recruiterService.getProfileById(profileId);
             return ResponseEntity.ok(recruiterProfileResponse);
