@@ -34,6 +34,7 @@ public class JobResponse {
     private Integer viewCount;
     private Integer applicationCount;
 
+
     private CompanyInfo company;
 
     private String message;
