@@ -91,6 +91,7 @@ public class CandidateProfileService {
         profile.setExperienceYears(request.getExperienceYears());
         profile.setEducation(request.getEducation());
         profile.setBio(request.getBio());
+        profile.setResumeUrl(request.getResumeUrl());
         profile.setLinkedinUrl(request.getLinkedinUrl());
         profile.setGithubUrl(request.getGithubUrl());
         profile.setPortfolioUrl(request.getPortfolioUrl());
