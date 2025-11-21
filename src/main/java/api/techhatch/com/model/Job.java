@@ -66,9 +66,9 @@ public class Job {
     @Column(name = "expiry_date", updatable = false)
     private LocalDateTime expiryDate;
     @Column(name = "view_count")
-    private Integer viewCount = 0;
+    private Integer viewCount;
     @Column(name = "application_count")
-    private Integer applicationCount = 0;
+    private Integer applicationCount;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
@@ -79,7 +79,8 @@ public class Job {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
         postedDate = LocalDateTime.now();
-
+        if (applicationCount==null) applicationCount = 0;
+        if (viewCount==null) viewCount = 0;
         // Set expiry date to 60 days from now if not provided
         if (expiryDate == null) {
             expiryDate = LocalDateTime.now().plusDays(60);
