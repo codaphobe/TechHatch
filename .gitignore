@@ -19,7 +19,6 @@ target/
 *.iml
 *.ipr
 
-### Plan folders ###
+/server/initialise_db_tables.sql
+/server/src/main/java/api/techhatch/com/GenerateSecret.java
 /Planning/
-!/src/main/java/api/techhatch/com/GenerateSecret.java
-
