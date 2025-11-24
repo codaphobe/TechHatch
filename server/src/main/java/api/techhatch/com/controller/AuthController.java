@@ -4,11 +4,13 @@ import api.techhatch.com.dto.request.LoginRequest;
 import api.techhatch.com.dto.request.RegisterRequest;
 import api.techhatch.com.dto.response.AuthResponse;
 import api.techhatch.com.dto.response.RegisterResponse;
+import api.techhatch.com.model.UserPrinciple;
 import api.techhatch.com.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,6 +44,20 @@ public class AuthController {
                     .message(e.getMessage())
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponse> getCurrentUser(@AuthenticationPrincipal UserPrinciple userPrinciple){
+
+        try {
+            AuthResponse response = service.getCurrentUser(userPrinciple);
+            return ResponseEntity.ok(response);
+        }catch (RuntimeException e){
+            AuthResponse errorResponse = AuthResponse.builder()
+                    .message(e.getMessage())
+                    .build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 }

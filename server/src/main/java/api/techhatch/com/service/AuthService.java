@@ -4,6 +4,7 @@ import api.techhatch.com.dto.request.LoginRequest;
 import api.techhatch.com.dto.request.RegisterRequest;
 import api.techhatch.com.dto.response.AuthResponse;
 import api.techhatch.com.dto.response.RegisterResponse;
+import api.techhatch.com.model.UserPrinciple;
 import api.techhatch.com.model.Users;
 import api.techhatch.com.repository.UserRepo;
 import api.techhatch.com.util.JwtUtil;
@@ -63,8 +64,17 @@ public class AuthService {
                 .build();
     }
 
-    public List<Users> getAllUsers(){
-        return repo.findAll();
+    public AuthResponse getCurrentUser(UserPrinciple userPrinciple){
+
+        Users user  = repo.findUserByEmail(userPrinciple.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return AuthResponse.builder()
+                .userId(user.getId())
+                .email(userPrinciple.getUsername())
+                .role(user.getRole().toString())
+                .message("User fetched successfully")
+                .build();
     }
 
 
