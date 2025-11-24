@@ -17,7 +17,7 @@ export const applicationService = {
 
   getApplicationsForJob: async (jobId, params) => {
     const response = await api.get(`/api/v1/applications/job/${jobId}`,{params});
-    return response.data.content;
+    return response.data;
   },
 
   updateApplicationStatus: async (id, status, recruiterNotes) => {

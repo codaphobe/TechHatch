@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { applicationService } from '../../services/applicationService';
 import { jobService } from '../../services/jobService';
 import Navbar from '../../components/common/Navbar';
@@ -46,18 +46,22 @@ const JobApplications = () => {
         applicationService.getApplicationsForJob(id, params),
       ]);
       setJob(jobData);
-      setApplications(appsData);
+      setApplications(appsData.content);
       // Initialize status update state
       const initialStatus = {};
-      appsData.forEach(app => {
+      appsData.content.forEach(app => {
         initialStatus[app.id] = {
           status: app.status,
           recruiterNotes: app.recruiterNotes || '',
         };
       });
       setStatusUpdate(initialStatus);
+      setPagination((prev) => ({
+        ...prev, totalPages:appsData.totalPages
+      }));
     } catch (error) {
       toast.error('Failed to load applications');
+      console.log(error)
     } finally {
       setLoading(false);
     }
@@ -71,6 +75,10 @@ const JobApplications = () => {
         [field]: value,
       },
     }));
+    setPagination((prev) => ({
+      ...prev, 
+      page:0
+    }))
   };
   
   const handleUpdateStatus = async (appId) => {
@@ -131,7 +139,7 @@ const JobApplications = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=" ">View All</SelectItem>
+                  <SelectItem value=" ">View all</SelectItem>
                   {Object.entries(APPLICATION_STATUS).map(([key, value]) => (
                                     <SelectItem key={key} value={key}>
                                       {value}

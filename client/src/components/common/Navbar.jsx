@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/button';
-import { Briefcase } from 'lucide-react';
+import Logo from '/techhatch_logo_lighter_brackets.png'
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -17,7 +17,7 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <Briefcase className="h-8 w-8 text-primary" />
+            <img src={Logo} alt="TechHatch Home" className="h-10 scale-150" />
             <span className="text-2xl font-bold text-foreground tracking-wide">tech
               <span className="text-primary">
                 Hatch
