@@ -28,4 +28,4 @@ jobs:
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with: 
-          path: target/*.jar
+          path: server/target/*.jar
