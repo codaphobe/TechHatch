@@ -2,8 +2,8 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-COPY target/*.jar ./
+COPY target/*.jar ./techhatch-app
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","techhatch-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","techhatch-app.jar"]
