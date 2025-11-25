@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-COPY target/*.jar ./techhatch-app
+COPY target/*.jar ./techhatch-app.jar
 
 EXPOSE 8080
 
