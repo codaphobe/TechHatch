@@ -22,6 +22,7 @@ jobs:
           cache: 'maven'   
 
       - name: Build with maven (skip tests)
+        working-directory: server
         run: mvn -B package -DskipTests
 
       - name: Upload JAR artifact
