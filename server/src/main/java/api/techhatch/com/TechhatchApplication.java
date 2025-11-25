@@ -21,16 +21,17 @@ public class TechhatchApplication {
         return new ObjectMapper();
     }
 
-    @Bean
-    public ApplicationRunner testBeans(ApplicationContext ctx) {
-        return args -> {
-            System.out.println("==== CONTROLLERS FOUND ====");
-            for (String bean : ctx.getBeanDefinitionNames()) {
-                if (bean.toLowerCase().contains("service")) {
-                    System.out.println(bean);
-                }
-            }
-        };
-    }
+//For testing beans load
+//    @Bean
+//    public ApplicationRunner testBeans(ApplicationContext ctx) {
+//        return args -> {
+//            System.out.println("==== CONTROLLERS FOUND ====");
+//            for (String bean : ctx.getBeanDefinitionNames()) {
+//                if (bean.toLowerCase().contains("service")) {
+//                    System.out.println(bean);
+//                }
+//            }
+//        };
+//    }
 
 }
