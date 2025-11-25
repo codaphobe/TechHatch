@@ -1,0 +1,30 @@
+name: Build jar and dockerize
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-jar:
+    name: Builds jar
+    runs-on: ubuntu-latest
+    steps:
+      - name : checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK and cache Maven deps
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: 'maven'   
+
+      - name: Build with maven (skip tests)
+        run: mvn -B package -DskipTests
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with: 
+          path: target/*.jar
