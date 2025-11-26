@@ -34,17 +34,8 @@ public class JobApplicationController {
     public ResponseEntity<JobApplicationResponse> applyJob(@AuthenticationPrincipal UserPrinciple userPrinciple,
                                                            @RequestBody JobApplicationRequest request){
 
-        JobApplicationResponse response;
-
-        try{
-            response = applicationService.applyJob(userPrinciple.getUsername(), request);
-            return ResponseEntity.ok(response);
-        }catch(RuntimeException e){
-             response = JobApplicationResponse.builder()
-                    .message(e.getMessage())
-                    .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+        JobApplicationResponse response = applicationService.applyJob(userPrinciple.getUsername(), request);
+        return ResponseEntity.ok(response);
     }
 
     /**

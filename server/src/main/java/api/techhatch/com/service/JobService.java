@@ -3,6 +3,8 @@ package api.techhatch.com.service;
 import api.techhatch.com.dto.request.JobCreateRequest;
 import api.techhatch.com.dto.request.JobSearchFilter;
 import api.techhatch.com.dto.response.JobResponse;
+import api.techhatch.com.exception.ResourceNotFoundException;
+import api.techhatch.com.exception.UnauthorizedException;
 import api.techhatch.com.model.Job;
 import api.techhatch.com.model.RecruiterProfile;
 import api.techhatch.com.repository.JobRepo;
@@ -35,7 +37,7 @@ public class JobService {
     public JobResponse postJob(String email, JobCreateRequest request){
 
         RecruiterProfile recruiterProfile = recruiterRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Job job = Job.builder()
                 .recruiterProfile(recruiterProfile)
@@ -96,7 +98,7 @@ public class JobService {
     public JobResponse getJobById(Long id){
 
          Job job = jobRepo.findById(id)
-                 .orElseThrow(() -> new RuntimeException("Job not found"));
+                 .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
 
          JobResponse response = mapToResponse(job);
          response.setMessage("Job fetched");
@@ -111,7 +113,7 @@ public class JobService {
     public Page<JobResponse> getMyJobs(String email, int page){
 
         RecruiterProfile recruiterProfile = recruiterRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Recruiter not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
 
         Pageable pageable = PageRequest.of(
                 page,
@@ -126,14 +128,14 @@ public class JobService {
 
     public JobResponse updateJob(String email, Long jobId, JobCreateRequest request){
         Job job = jobRepo.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
 
         RecruiterProfile recruiter = recruiterRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Recruiter profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Recruiter profile not found"));
 
         // Verify ownership
         if (!job.getRecruiterProfile().getId().equals(recruiter.getId())) {
-            throw new RuntimeException("You can only update your own job postings");
+            throw new UnauthorizedException("You can only update your own job postings");
         }
 
         // Update fields
@@ -164,13 +166,13 @@ public class JobService {
     public JobResponse closeJob(String email, Long jobIid){
 
         Job job = jobRepo.findById(jobIid)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
 
         RecruiterProfile recruiterProfile = recruiterRepo.findByUserEmail(email)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (!job.getRecruiterProfile().getId().equals(recruiterProfile.getId())) {
-            throw new RuntimeException("You can only close your own job postings");
+            throw new UnauthorizedException("You can only close your own job postings");
         }
 
         job.setJobStatus(Job.JobStatus.CLOSED);
@@ -187,13 +189,13 @@ public class JobService {
     public void deleteJob(String email, Long jobId){
 
         Job job = jobRepo.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
 
         RecruiterProfile recruiterProfile = recruiterRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (!job.getRecruiterProfile().getId().equals(recruiterProfile.getId())) {
-            throw new RuntimeException("You can only delete your own job postings");
+            throw new UnauthorizedException("You can only delete your own job postings");
         }
         //delete the job
         jobRepo.delete(job);

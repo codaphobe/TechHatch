@@ -59,14 +59,8 @@ public class RecruiterProfileController {
      */
     @GetMapping("/{profileId}")
     public ResponseEntity<RecruiterProfileResponse> getRecruiterProfileById(@PathVariable Long profileId){
-        try{
-            RecruiterProfileResponse recruiterProfileResponse = recruiterService.getProfileById(profileId);
-            return ResponseEntity.ok(recruiterProfileResponse);
-        }catch (RuntimeException ex){
-            RecruiterProfileResponse response = RecruiterProfileResponse.builder()
-                    .message(ex.getMessage())
-                    .build();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+
+        RecruiterProfileResponse recruiterProfileResponse = recruiterService.getProfileById(profileId);
+        return ResponseEntity.ok(recruiterProfileResponse);
     }
 }

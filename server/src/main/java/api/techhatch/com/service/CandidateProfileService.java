@@ -2,6 +2,7 @@ package api.techhatch.com.service;
 
 import api.techhatch.com.dto.request.CandidateProfileRequest;
 import api.techhatch.com.dto.response.CandidateProfileResponse;
+import api.techhatch.com.exception.ResourceNotFoundException;
 import api.techhatch.com.model.CandidateProfile;
 import api.techhatch.com.model.Users;
 import api.techhatch.com.repository.CandidateProfileRepo;
@@ -38,7 +39,7 @@ public class CandidateProfileService {
     public CandidateProfileResponse createOrUpdateProfile(String email, CandidateProfileRequest request){
 
         Users user = userRepo.findUserByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         //Get current profile or create new one
         CandidateProfile candidateProfile = candidateRepo.findByUserId(user.getId())
@@ -61,7 +62,7 @@ public class CandidateProfileService {
     public CandidateProfileResponse getMyProfile(String email) {
 
         CandidateProfile profile = candidateRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         return mapToResponse(profile);
     }
@@ -73,7 +74,7 @@ public class CandidateProfileService {
     public CandidateProfileResponse getProfileById(Long profileId) {
 
         CandidateProfile profile = candidateRepo.findById(profileId)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         return mapToResponse(profile);
     }

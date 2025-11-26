@@ -2,13 +2,12 @@ package api.techhatch.com.service;
 
 import api.techhatch.com.dto.request.RecruiterProfileRequest;
 import api.techhatch.com.dto.response.RecruiterProfileResponse;
+import api.techhatch.com.exception.ResourceNotFoundException;
 import api.techhatch.com.model.RecruiterProfile;
 import api.techhatch.com.model.Users;
 import api.techhatch.com.repository.RecruiterProfileRepo;
 import api.techhatch.com.repository.UserRepo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +28,7 @@ public class RecruiterProfileService {
 
         //Fetch authenticated user
         Users user = userRepo.findUserByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         //Get existing profile or create a new one
         RecruiterProfile recruiterProfile = recruiterRepo.findByUserId(user.getId())
@@ -52,7 +51,7 @@ public class RecruiterProfileService {
     public RecruiterProfileResponse getMyProfile(String email) {
 
         RecruiterProfile profile = recruiterRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         return mapToResponse(profile,"");
     }
@@ -64,7 +63,7 @@ public class RecruiterProfileService {
     public RecruiterProfileResponse getProfileById(Long profileId) {
 
         RecruiterProfile profile = recruiterRepo.findById(profileId)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         return mapToResponse(profile, "");
     }

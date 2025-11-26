@@ -3,6 +3,10 @@ package api.techhatch.com.service;
 import api.techhatch.com.dto.request.ApplicationStatusUpdateRequest;
 import api.techhatch.com.dto.request.JobApplicationRequest;
 import api.techhatch.com.dto.response.JobApplicationResponse;
+import api.techhatch.com.exception.BadRequestException;
+import api.techhatch.com.exception.DuplicateResourceException;
+import api.techhatch.com.exception.ResourceNotFoundException;
+import api.techhatch.com.exception.UnauthorizedException;
 import api.techhatch.com.model.CandidateProfile;
 import api.techhatch.com.model.Job;
 import api.techhatch.com.model.JobApplication;
@@ -40,30 +44,30 @@ public class JobApplicationService {
 
         //fetch the job candidate is applying to
         Job job = jobRepo.findById(request.getJobId())
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
 
         //retrieve the candidate applying
         CandidateProfile candidateProfile = candidateProfileRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Candidate profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Candidate profile not found"));
 
         //check if the profile is completed
         if(!candidateProfile.isProfileComplete()){
-            throw new RuntimeException("Please complete your candidate profile before applying");
+            throw new BadRequestException("Please complete your candidate profile before applying");
         }
 
         //check if the job is active
         if(job.getJobStatus() != Job.JobStatus.ACTIVE){
-            throw new RuntimeException("This job posting is no longer active");
+            throw new BadRequestException("This job posting is no longer active");
         }
 
         //check if job is expired (default:60 days)
         if(job.isExpired()){
-            throw new RuntimeException("This job posting is expired");
+            throw new BadRequestException("This job posting is expired");
         }
 
         //duplicate application for the same job
         if (applicationRepo.existsByJobIdAndCandidateProfileId(job.getId(), candidateProfile.getId())){
-            throw new RuntimeException("You have already applied for this job");
+            throw new DuplicateResourceException("You have already applied for this job");
         }
 
         JobApplication application = JobApplication.builder()
@@ -96,7 +100,7 @@ public class JobApplicationService {
     public Page<JobApplicationResponse> getMyJobApplications(String email, String statusFilter, int page) {
 
         CandidateProfile candidateProfile = candidateProfileRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Candidate profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Candidate profile not found"));
 
         Pageable pageable = PageRequest.of(
                 page,
@@ -122,14 +126,14 @@ public class JobApplicationService {
     public Page<JobApplicationResponse> getJobApplications(String email, Long jobId, String statusFilter, int page) {
 
         RecruiterProfile recruiterProfile = recruiterProfileRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Recruiter Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Recruiter Profile not found"));
 
         Job job = jobRepo.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
 
         //check if recruiter is accessing only his own job applicants
         if(!job.getRecruiterProfile().getId().equals(recruiterProfile.getId())){
-            throw new RuntimeException("You can only view your job applications");
+            throw new UnauthorizedException("You can only view your job applications");
         }
 
         JobApplication.Status status = parseStatus(statusFilter);
@@ -155,31 +159,31 @@ public class JobApplicationService {
     public JobApplicationResponse getApplicationById(String email, Long applicationId, String userRole) {
 
         JobApplication application = applicationRepo.findById(applicationId)
-                .orElseThrow(() -> new RuntimeException("Application not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
 
         // Verify authorization based on role
         if (userRole.equals("CANDIDATE")) {
             CandidateProfile candidate = candidateProfileRepo.findByUserEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Candidate profile not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Candidate profile not found"));
 
             if (!application.getCandidateProfile().getId().equals(candidate.getId())) {
-                throw new RuntimeException("You can only view your own applications");
+                throw new UnauthorizedException("You can only view your own applications");
             }
 
             return mapToResponse(application, true, false);
 
         } else if (userRole.equals("RECRUITER")) {
             RecruiterProfile recruiter = recruiterProfileRepo.findByUserEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Recruiter profile not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Recruiter profile not found"));
 
             if (!application.getJob().getRecruiterProfile().getId().equals(recruiter.getId())) {
-                throw new RuntimeException("You can only view applications for your own jobs");
+                throw new UnauthorizedException("You can only view applications for your own jobs");
             }
 
             return mapToResponse(application, false, true);
 
         } else {
-            throw new RuntimeException("Invalid user role");
+            throw new UnauthorizedException("Invalid user role");
         }
     }
 
@@ -196,18 +200,18 @@ public class JobApplicationService {
             ApplicationStatusUpdateRequest request) {
 
         RecruiterProfile recruiter = recruiterProfileRepo.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("Recruiter profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Recruiter profile not found"));
 
         JobApplication application = applicationRepo.findById(applicationId)
-                .orElseThrow(() -> new RuntimeException("Application not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
 
         if (!application.getJob().getRecruiterProfile().getId().equals(recruiter.getId())) {
-            throw new RuntimeException("You can only update applications for your own jobs");
+            throw new UnauthorizedException("You can only update applications for your own jobs");
         }
 
         // Parse and validate status
         JobApplication.Status newStatus = parseStatus(request.getStatus());
-        if (newStatus == null) throw new RuntimeException("Invalid application status");
+        if (newStatus == null) throw new ResourceNotFoundException("Invalid application status");
 
         // Update status
         application.setStatus(newStatus);

@@ -23,41 +23,22 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> registerUser(@RequestBody @Valid RegisterRequest request){
-        try{
+
             RegisterResponse response = service.register(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        }catch (RuntimeException e){
-            RegisterResponse errorResponse = RegisterResponse.builder()
-                    .message(e.getMessage())
-                    .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-        }
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> loginUser(@RequestBody @Valid LoginRequest request){
-        try{
-            AuthResponse response = service.login(request);
-            return ResponseEntity.ok(response);
-        }catch (RuntimeException e){
-            AuthResponse errorResponse = AuthResponse.builder()
-                    .message(e.getMessage())
-                    .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-        }
+
+        AuthResponse response = service.login(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/me")
     public ResponseEntity<AuthResponse> getCurrentUser(@AuthenticationPrincipal UserPrinciple userPrinciple){
 
-        try {
-            AuthResponse response = service.getCurrentUser(userPrinciple);
-            return ResponseEntity.ok(response);
-        }catch (RuntimeException e){
-            AuthResponse errorResponse = AuthResponse.builder()
-                    .message(e.getMessage())
-                    .build();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-        }
+        AuthResponse response = service.getCurrentUser(userPrinciple);
+        return ResponseEntity.ok(response);
     }
 }

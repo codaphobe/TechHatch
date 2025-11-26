@@ -4,6 +4,9 @@ import api.techhatch.com.dto.request.LoginRequest;
 import api.techhatch.com.dto.request.RegisterRequest;
 import api.techhatch.com.dto.response.AuthResponse;
 import api.techhatch.com.dto.response.RegisterResponse;
+import api.techhatch.com.exception.DuplicateResourceException;
+import api.techhatch.com.exception.ResourceNotFoundException;
+import api.techhatch.com.exception.UnauthorizedException;
 import api.techhatch.com.model.UserPrinciple;
 import api.techhatch.com.model.Users;
 import api.techhatch.com.repository.UserRepo;
@@ -19,8 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,14 +37,14 @@ public class AuthService {
 
     public RegisterResponse register(RegisterRequest request){
         if(repo.existsByEmail(request.getEmail())){
-            throw new RuntimeException("Email is already registered");
+            throw new DuplicateResourceException("Email is already registered");
         }
 
         Role role;
         try {
             role = Role.valueOf(request.getRole().toUpperCase());
         }catch (IllegalArgumentException e){
-            throw new RuntimeException("Invalid role.");
+            throw new UnauthorizedException("Invalid role");
         }
 
         Users users = Users.builder()
@@ -67,7 +68,7 @@ public class AuthService {
     public AuthResponse getCurrentUser(UserPrinciple userPrinciple){
 
         Users user  = repo.findUserByEmail(userPrinciple.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return AuthResponse.builder()
                 .userId(user.getId())
@@ -89,10 +90,10 @@ public class AuthService {
         }
 
         Users user = repo.findUserByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid email or password"));
 
         if (!user.isActive()) {
-            throw new RuntimeException("Account is deactivated");
+            throw new ResourceNotFoundException("Account is deactivated");
         }
 
         //Generate token here
