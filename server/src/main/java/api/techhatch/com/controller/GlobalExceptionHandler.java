@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     /**
      * Handles ResourceNotFoundExceptions (404)
      */
-    @ExceptionHandler(ResourceAccessException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(
             ResourceNotFoundException ex,
             WebRequest request){
