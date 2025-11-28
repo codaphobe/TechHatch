@@ -60,7 +60,7 @@ public class CandidateProfile {
 
     public boolean isProfileComplete(){
         return StringUtils.hasText(fullName) &&
-                StringUtils.hasText(skills) &&
-                StringUtils.hasText(resumeUrl);
+                StringUtils.hasText(skills);
+                // && StringUtils.hasText(resumeUrl);
     }
 }
