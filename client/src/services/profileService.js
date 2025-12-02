@@ -17,7 +17,7 @@ export const profileService = {
   },
 
   updateRecruiterProfile: async (profileData) => {
-    const response = await api.put('/api/v1/profile/recruiter', profileData);
+    const response = await api.post('/api/v1/profile/recruiter', profileData);
     return response.data;
   },
 };

@@ -253,14 +253,13 @@ const PostJob = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="expiryDate">Expiry Date *</Label>
+                <Label htmlFor="expiryDate">Expiry Date (Default 60 days)</Label>
                 <Input
                   id="expiryDate"
                   name="expiryDate"
                   type="date"
                   value={formData.expiryDate}
                   onChange={handleChange}
-                  required
                   min={new Date().toISOString().split('T')[0]}
                 />
               </div>

@@ -20,7 +20,7 @@ const RecruiterProfile = () => {
     companyName: '',
     companyDescription: '',
     phone: '',
-    website: '',
+    companyWebsite: '',
     companySize: '',
     industry: '',
     location: '',
@@ -130,11 +130,11 @@ const RecruiterProfile = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="website">Website</Label>
+              <Label htmlFor="companyWebsite">Website</Label>
               <Input
-                id="website"
-                name="website"
-                value={formData.website}
+                id="companyWebsite"
+                name="companyWebsite"
+                value={formData.companyWebsite}
                 onChange={handleChange}
                 placeholder="https://example.com"
               />
