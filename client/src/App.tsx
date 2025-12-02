@@ -44,14 +44,18 @@ const App = () => (
         <AuthProvider>
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={
+              <PublicRoute type="landing">
+                <Landing />
+              </PublicRoute>
+            } />
             <Route path="/login" element={
-              <PublicRoute>
+              <PublicRoute type="login">
                 <Login />
               </PublicRoute>
               } />
             <Route path="/register" element={
-              <PublicRoute>
+              <PublicRoute type="register">
                 <Register />
               </PublicRoute>} />
             <Route path="/jobs" element={<JobSearch />} />
