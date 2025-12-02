@@ -13,9 +13,6 @@ const api = axios.create({
 
 const clearAuthStorage = () => {
   localStorage.removeItem('token');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('email');
-  localStorage.removeItem('role');
 };
 
 const redirectToLogin = () => {

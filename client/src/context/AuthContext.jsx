@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect } from 'react';
 import { authService } from '../services/authService';
 import { isTokenExpired } from '../utils/jwtUtils';
 import toast from 'react-hot-toast';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext(null);
 
@@ -12,18 +13,14 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId');
-      const email = localStorage.getItem('email');
-      const role = localStorage.getItem('role');
       // Check if token exists and is not expired
-      if (token && !isTokenExpired(token) && userId && email && role) {
-        setUser({ userId, email, role, token });
+      if (token && !isTokenExpired(token)) {
         try {
-          const userData = await authService.getCurrentUser();
+          const decoded = jwtDecode(token);
           setUser({
-            userId: userData.userId || userId,
-            email: userData.email || email,
-            role: userData.role || role,
+            userId: decoded.userId,
+            email: decoded.sub,
+            role: decoded.role,
             token: token,
           });
         } catch (error) {
@@ -49,14 +46,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const data = await authService.login(email, password);
+    const decoded = jwtDecode(data.token);
     localStorage.setItem('token', data.token);
-    localStorage.setItem('userId', data.userId);
-    localStorage.setItem('email', data.email);
-    localStorage.setItem('role', data.role);
     setUser({
-      userId: data.userId,
-      email: data.email,
-      role: data.role,
+      userId: decoded.userId,
+      email: decoded.sub,
+      role: decoded.role,
       token: data.token,
     });
     return data;
