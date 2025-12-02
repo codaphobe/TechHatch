@@ -9,6 +9,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import { formatDateRelative } from '../../utils/formatters';
 import toast from 'react-hot-toast';
 import { AlertCircle, Briefcase } from 'lucide-react';
+import { Skeleton } from '../../components/ui/skeleton';
 
 const CandidateDashboard = () => {
   const { user } = useAuth();
@@ -21,6 +22,7 @@ const CandidateDashboard = () => {
   }, []);
 
   const fetchData = async () => {
+    let timerId = null;
     try {
       const [profileData, applicationsData] = await Promise.all([
         profileService.getCandidateProfile().catch(() => null),
@@ -31,7 +33,10 @@ const CandidateDashboard = () => {
     } catch (error) {
       toast.error('Failed to load dashboard data');
     } finally {
-      setLoading(false);
+        clearTimeout(timerId);
+        timerId = setTimeout(() => {
+          setLoading(false);
+        },500); 
     }
   };
 
@@ -45,8 +50,14 @@ const CandidateDashboard = () => {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="flex min-h-[calc(100vh-80px)] items-center justify-center">
-          <div className="text-xl">Loading...</div>
+        <div className="container mx-auto px-6 py-8">
+          <Skeleton className="h-[50px] w-[350px] rounded-xl mb-8"/>
+          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <Skeleton className="p-6 h-[120px]"/>
+            <Skeleton className="p-6 h-[120px]"/>
+            <Skeleton className="p-6 h-[120px]"/>
+          </div>
+          <Skeleton className="p-6 h-[400px]"/>
         </div>
       </div>
     );
