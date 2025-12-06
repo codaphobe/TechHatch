@@ -16,6 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @RestControllerAdvice
@@ -182,7 +183,7 @@ public class GlobalExceptionHandler {
                 .path(getPath(request))
                 .timeStamp(LocalDateTime.now().toString())
                 .build();
-
+        System.err.println(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 

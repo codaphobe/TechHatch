@@ -50,7 +50,7 @@ public class Job {
     private WorkMode workMode;
     @Column(name = "experience_level")
     @Enumerated(EnumType.STRING)
-    private ExperienceLevel expLevel;
+    private ExperienceLevel experienceLevel;
     @Column(name = "salary_min", precision = 10, scale = 2)
     private BigDecimal salaryMin;
     @Column(name = "salary_max", precision = 10, scale = 2)

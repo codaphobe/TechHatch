@@ -36,7 +36,7 @@ public class JobCreateRequest {
     private String workMode;
 
     @NotBlank(message = "Experience level is required")
-    private String expLevel;
+    private String experienceLevel;
 
     @Min(value = 0, message = "Minimum salary must positive")
     private BigDecimal salaryMin;

@@ -48,7 +48,7 @@ public class JobService {
                 .location(request.getLocation())
                 .jobType(Job.JobType.valueOf(request.getJobType().toUpperCase()))
                 .workMode(request.getWorkMode() != null ? Job.WorkMode.valueOf(request.getWorkMode().toUpperCase()) : null)
-                .expLevel(Job.ExperienceLevel.valueOf(request.getExpLevel().toUpperCase()))
+                .experienceLevel(Job.ExperienceLevel.valueOf(request.getExperienceLevel().toUpperCase()))
                 .salaryMin(request.getSalaryMin())
                 .salaryMax(request.getSalaryMax())
                 .currency(request.getCurrency() != null ? request.getCurrency() : "INR")
@@ -146,7 +146,7 @@ public class JobService {
         job.setLocation(request.getLocation());
         job.setJobType(Job.JobType.valueOf(request.getJobType().toUpperCase()));
         job.setWorkMode(request.getWorkMode() != null ? Job.WorkMode.valueOf(request.getWorkMode().toUpperCase()) : null);
-        job.setExpLevel(Job.ExperienceLevel.valueOf(request.getExpLevel().toUpperCase()));
+        job.setExperienceLevel(Job.ExperienceLevel.valueOf(request.getExperienceLevel().toUpperCase()));
         job.setSalaryMin(request.getSalaryMin());
         job.setSalaryMax(request.getSalaryMax());
         job.setRequiredSkills(convertSkillsToJson(request.getRequiredSkills()));
@@ -264,7 +264,7 @@ public class JobService {
                 .location(job.getLocation())
                 .jobType(job.getJobType().toString())
                 .workMode(job.getWorkMode() != null ? job.getWorkMode().toString() : null)
-                .experienceLevel(job.getExpLevel().toString())
+                .experienceLevel(job.getExperienceLevel().toString())
                 .salaryMin(job.getSalaryMin())
                 .salaryMax(job.getSalaryMax())
                 .currency(job.getCurrency())
