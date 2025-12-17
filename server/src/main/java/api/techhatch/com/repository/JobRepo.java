@@ -25,7 +25,7 @@ public interface JobRepo extends JpaRepository<Job, Long> {
                             OR LOWER(j.description) LIKE LOWER(CONCAT('%', :keyword, '%')))
                         AND (:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%')))
                         AND (:jobType IS NULL OR j.jobType = :jobType)
-                        AND (:experienceLevel IS NULL OR j.expLevel = :experienceLevel)
+                        AND (:experienceLevel IS NULL OR j.experienceLevel = :experienceLevel)
                         AND (:minSalary IS NULL OR j.salaryMax >= :minSalary)
                         AND (:maxSalary IS NULL OR j.salaryMin <= :maxSalary)
                         AND (:fromDate IS NULL OR j.postedDate >= :fromDate)

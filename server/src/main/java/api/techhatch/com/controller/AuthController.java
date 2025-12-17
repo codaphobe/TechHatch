@@ -3,7 +3,7 @@ package api.techhatch.com.controller;
 import api.techhatch.com.dto.request.LoginRequest;
 import api.techhatch.com.dto.request.RegisterRequest;
 import api.techhatch.com.dto.response.AuthResponse;
-import api.techhatch.com.dto.response.RegisterResponse;
+import api.techhatch.com.dto.response.OtpSentResponse;
 import api.techhatch.com.model.UserPrinciple;
 import api.techhatch.com.service.AuthService;
 import jakarta.validation.Valid;
@@ -22,16 +22,16 @@ public class AuthController {
     private final AuthService service;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> registerUser(@RequestBody @Valid RegisterRequest request){
+    public ResponseEntity<OtpSentResponse> registerUser(@RequestBody @Valid RegisterRequest request){
 
-            RegisterResponse response = service.register(request);
+            final OtpSentResponse response = service.register(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> loginUser(@RequestBody @Valid LoginRequest request){
+    public ResponseEntity<OtpSentResponse> loginUser(@RequestBody @Valid LoginRequest request){
 
-        AuthResponse response = service.login(request);
+        OtpSentResponse response = service.login(request);
         return ResponseEntity.ok(response);
     }
 

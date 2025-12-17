@@ -1,10 +1,7 @@
 package api.techhatch.com.controller;
 
 import api.techhatch.com.dto.response.ErrorResponse;
-import api.techhatch.com.exception.BadRequestException;
-import api.techhatch.com.exception.DuplicateResourceException;
-import api.techhatch.com.exception.ResourceNotFoundException;
-import api.techhatch.com.exception.UnauthorizedException;
+import api.techhatch.com.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -147,6 +144,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
+    @ExceptionHandler(OtpInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidOtp(OtpInvalidException ex,
+                                                          WebRequest request){
+
+        ErrorResponse error = ErrorResponse.builder()
+                .success(false)
+                .message(ex.getMessage())
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .path(getPath(request))
+                .timeStamp(LocalDateTime.now().toString())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
     /**
      * Handle IllegalArgumentExceptions (400)
      */
@@ -184,6 +197,7 @@ public class GlobalExceptionHandler {
                 .timeStamp(LocalDateTime.now().toString())
                 .build();
         System.err.println(ex.getMessage());
+        ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
