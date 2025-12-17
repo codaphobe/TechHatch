@@ -20,6 +20,10 @@ public class Users {
         CANDIDATE, RECRUITER, ADMIN
     }
 
+    public enum AccountStatus {
+        UNVERIFIED,ACTIVE,SUSPENDED
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long  id;
@@ -34,8 +38,12 @@ public class Users {
     @Column(nullable = false)
     private Role role;
 
-    @Column(name = "is_active")
-    private boolean isActive;
+    @Column(name = "email_verified")
+    private Boolean emailVerified;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_status")
+    private AccountStatus accountStatus;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -47,6 +55,9 @@ public class Users {
     protected void onCreate(){
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+
+        if(emailVerified==null) emailVerified=false;
+        if(accountStatus==null) accountStatus=AccountStatus.UNVERIFIED;
     }
 
     @PreUpdate
