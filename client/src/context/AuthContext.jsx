@@ -45,15 +45,37 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
+    // Now only sends OTP, doesn't authenticate
     const data = await authService.login(email, password);
+    return data;
+  };
+
+  const verifyLoginOTP = async (email, otpCode) => {
+    const data = await authService.verifyLoginOTP(email, otpCode);
     const decoded = jwtDecode(data.token);
     localStorage.setItem('token', data.token);
-    setUser({
+    const userData = {
       userId: decoded.userId,
       email: decoded.sub,
       role: decoded.role,
       token: data.token,
-    });
+    };
+    setUser(userData);
+    // Return user data with role for navigation logic
+    return {
+      ...data,
+      role: decoded.role,
+    };
+  };
+
+  const register = async (email, password, role) => {
+    // Now only sends OTP, doesn't create user session
+    return authService.register(email, password, role);
+  };
+
+  const verifyRegistrationOTP = async (email, otpCode) => {
+    // Verifies OTP and returns user data, but doesn't authenticate
+    const data = await authService.verifyRegistrationOTP(email, otpCode);
     return data;
   };
 
@@ -62,12 +84,16 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const register = async (email, password, role) => {
-    return authService.register(email, password, role);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, loading }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      login, 
+      logout, 
+      register, 
+      verifyLoginOTP,
+      verifyRegistrationOTP,
+      loading 
+    }}>
       {children}
     </AuthContext.Provider>
   );
