@@ -7,6 +7,7 @@ import { Toaster as HotToaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import PublicRoute from "./components/common/PublicRoute";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 // Pages
 import Landing from "./pages/Landing";
@@ -32,10 +33,9 @@ import JobApplications from "./pages/recruiter/JobApplications";
 
 const queryClient = new QueryClient();
 
-
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <ReactQueryDevtools initialIsOpen={false} />
     <TooltipProvider>
       <Toaster />
       <Sonner />
