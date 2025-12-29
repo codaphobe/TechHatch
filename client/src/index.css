@@ -106,44 +106,42 @@ All colors MUST be HSL.
     --foreground: 0 0% 98%;
 
     --card: 0 0% 14%;
-    --card-foreground: 0 0% 98%;
+    --card-foreground: 0 0% 92%;
 
     --popover: 0 0% 25%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 27 95% 60%;
-    --primary-foreground: 12 81% 14%;
+    --primary: 26.8235 68% 49.0196%;
+    --primary-foreground: 0 0% 3.1373%;
 
-    --secondary: 0 0% 45%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 27.4074 59.1241% 26.8627%;
+    --secondary-foreground: 0 0% 98.0392%;
 
-    --muted: 0 0% 45%;
-    --muted-foreground: 0 0% 98%;
+    --muted: 27.45 50.43% 22.94%;
+    --muted-foreground: 0 0% 63%;
 
-    --accent: 20 91% 14%;
-    --accent-foreground: 43 96% 56%;
+    --accent: 27 50.63% 30.98%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 85% 97%;
 
-    --border: 0 0% 32%;
+    --border: 0 0% 26%;
     --input: 0 0% 32%;
     --ring: 27 95% 60%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 27 95% 60%;
-    --sidebar-primary-foreground: 12 81% 14%;
-    --sidebar-accent: 43 96% 56%;
+    --sidebar: 240 1.9608% 10%;
+    --sidebar-foreground: 0 0% 98.0392%;
+    --sidebar-primary: 228.8660 100% 19.0196%;
+    --sidebar-primary-foreground: 0 0% 98.0392%;
+    --sidebar-accent: 27.1875 50% 25.0980%;
+    --sidebar-accent-foreground: 0 0% 98.0392%;
+    --sidebar-border: 0 0% 15.6863%;
+    --sidebar-ring: 0 0% 32.1569%;
+
     --sidebar-accent-foreground: 20 91% 14%;
     --sidebar-border: 0 0% 32%;
     --sidebar-ring: 27 95% 60%;
-    --chart-1: 30 97% 72%;
-    --chart-2: 45 96% 64%;
-    --chart-3: 48 96% 76%;
-    --chart-4: 27 95% 60%;
-    --chart-5: 0 0% 45%;
-    --sidebar: 0 0% 14%;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --ow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
     --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);

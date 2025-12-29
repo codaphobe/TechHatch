@@ -132,7 +132,7 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="you@example.com"
-                  className="tracking-wider placeholder:text-muted"
+                  className="tracking-wider placeholder:text-muted-foreground"
                 />
               </div>
 
@@ -146,7 +146,7 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     placeholder="••••••••"
-                    className="font-extrabold text-lg tracking-widest placeholder:text-muted placeholder:font-extrabold placeholder:text-lg pr-10"
+                    className="font-extrabold text-lg tracking-widest placeholder:text-muted-foreground placeholder:font-extrabold placeholder:text-lg pr-10"
                   />
                   <Button
                     type="button"
@@ -182,7 +182,7 @@ const Login = () => {
                   onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   required
                   placeholder="000000"
-                  className="text-center text-2xl font-bold tracking-widest placeholder:text-muted"
+                  className="text-center text-2xl font-bold tracking-widest placeholder:text-muted-foreground"
                   maxLength={6}
                 />
               </div>
