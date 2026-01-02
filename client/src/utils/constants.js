@@ -47,3 +47,7 @@ export const STATUS_COLORS = {
   CLOSED: 'bg-gray-500',
   EXPIRED: 'bg-red-600',
 };
+
+export const PROFILE_QUERY_KEYS = {
+  candidateProfile: ['candidateProfile'],
+}

@@ -8,11 +8,13 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
 import toast from 'react-hot-toast';
+import ErrorState from '../../components/common/ErrorState'
+import { AlertCircleIcon } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert'
 
 const CandidateProfile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -26,14 +28,21 @@ const CandidateProfile = () => {
     portfolioUrl: '',
     location: '',
   });
+  const [formInitialized, setFormInitialized] = useState(false);
+  const [formErrors, setFormErrors] = useState([])
 
+  const candidateProfile = profileService.useProfileQuery();
+  const updateCandidateProfile = profileService.useUpdateProfileMutation();
+  const isProfileMissing = 
+    (candidateProfile.isError && 
+    candidateProfile.error?.response?.status === 404) || candidateProfile.data==null;
+  
+  //Setting the form for the first time only
+  //This prevents any background query refetch from undoing
+  //  users's unsaved edits
   useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const data = await profileService.getCandidateProfile(user.userId);
+    if(candidateProfile.data && !formInitialized){
+      const data = candidateProfile.data;
       setFormData({
         fullName: data.fullName || '',
         phone: data.phone || '',
@@ -46,12 +55,9 @@ const CandidateProfile = () => {
         portfolioUrl: data.portfolioUrl || '',
         location: data.location || '',
       });
-    } catch (error) {
-      // Profile doesn't exist yet
-    } finally {
-      setLoading(false);
+      setFormInitialized(true);
     }
-  };
+  }, [candidateProfile.data]);
 
   const handleChange = (e) => {
     setFormData({
@@ -63,25 +69,42 @@ const CandidateProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-
-    try {
+    setFormErrors([]);
       const profileData = {
         ...formData,
         skills: formData.skills.split(',').map((s) => s.trim()).filter((s) => s),
         experienceYears: parseInt(formData.experienceYears) || 0,
       };
 
-      await profileService.updateCandidateProfile(profileData);
-      toast.success('Profile updated successfully!');
-      navigate('/candidate/dashboard');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update profile');
-    } finally {
-      setSaving(false);
-    }
+      updateCandidateProfile.mutate(profileData,
+        {
+          onSuccess: () => {
+            toast.success('Profile updated successfully!');
+            setSaving(false);
+          },
+          
+          onError: (error) => {
+            const status = error?.response?.status
+            
+            if(status === 422){
+              const details = Array.isArray(error.response?.data?.details)
+                ? error.response.data.details
+                : [];
+              toast.error("Validation failed. Please review the form.", {id:"Validation errors", duration:5000})
+              setFormErrors(details);
+              setSaving(false);
+              return;
+            }
+            
+            toast.error("Failed to update profile")
+            console.log(error)
+            setSaving(false);
+          }
+        }
+      );
   };
 
-  if (loading) {
+  if (candidateProfile.isLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -91,11 +114,63 @@ const CandidateProfile = () => {
       </div>
     );
   }
+  
+  if(candidateProfile.isError && !isProfileMissing){
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex min-h-[calc(100vh-80px)] items-center justify-center">
+          <ErrorState
+            title="Something went wrong"
+            description="We couldn't load your profile. Please try again."
+            onRetry={() => candidateProfile.refetch()}
+            retrying={candidateProfile.isFetching}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-6 py-8">
+        <>
+          {isProfileMissing && (
+            <div className="mx-auto p-6 max-w-4xl">
+              <Alert className="bg-card text-card-foreground border-yellow-600 bg-yellow-50">
+                <AlertCircleIcon className="h-5 w-5 !text-yellow-600 "/>
+                <AlertTitle className="col-start-2 font-medium text-gray-900">
+                  Complete your profile
+                </AlertTitle>
+                <AlertDescription className="text-sm text-gray-700 col-start-2">
+                  Add your details to start applying for jobs
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+        </>
+        {/* Alert for validation errors */}
+        {formErrors.length > 0 && (
+          <div className="container mx-auto px-6 py-6 max-w-lg mb-4 ">
+            <Alert variant="destructive" className="bg-card text-sm px-4 py-3">
+              <AlertCircleIcon className="h-4 w-4" />
+              <AlertTitle className="font-semibold">
+                Some fields have errors.
+              </AlertTitle>
+              <AlertDescription >
+                <p >
+                  Please input proper values and try again.
+                </p>
+                <ul className="list-inside list-disc text-sm mt-2">
+                  {formErrors.map((msg, index) => (
+                    <li key={index}>{msg}</li>
+                  ))}
+                </ul>
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
         <div className="mx-auto max-w-3xl">
           <h1 className="mb-2 text-3xl font-bold text-foreground">Your Profile</h1>
           <p className="mb-8 text-muted-foreground">
@@ -121,6 +196,7 @@ const CandidateProfile = () => {
                 id="phone"
                 name="phone"
                 value={formData.phone}
+                type='number'
                 onChange={handleChange}
                 placeholder="9876543210"
               />

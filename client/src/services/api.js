@@ -2,7 +2,7 @@ import axios from 'axios';
 import { isTokenExpired } from '../utils/jwtUtils';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
-const RETRY_LIMIT = 5
+const RETRY_LIMIT = 3
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -45,12 +45,14 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    //No retries
+    // Handle 401 Unauthorized - clear auth and redirect
     if (error.response?.status === 401) {
       clearAuthStorage();
       redirectToLogin();
+      return Promise.reject(error);
     }
     
+    // Retry logic for server errors (500+) or network errors
     if (!error.response || error.response.status >= 500){
     
       const config = error.config;

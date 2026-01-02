@@ -38,8 +38,8 @@ const App = () => (
     <ReactQueryDevtools initialIsOpen={false} />
     <TooltipProvider>
       <Toaster />
-      <Sonner />
-      <HotToaster position="top-right" />
+      <Sonner position="bottom-left"/>
+      <HotToaster position="bottom-left" containerStyle={{top:80} as React.CSSProperties}/>
       <BrowserRouter>
         <AuthProvider>
           <Routes>
