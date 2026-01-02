@@ -115,13 +115,13 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.builder()
                 .success(false)
                 .message("Validation failed")
-                .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
-                .status(HttpStatus.UNAUTHORIZED.value())
+                .error(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase())
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
                 .details(errors)
                 .path(getPath(request))
                 .timeStamp(LocalDateTime.now().toString())
                 .build();
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
     }
 
     /**

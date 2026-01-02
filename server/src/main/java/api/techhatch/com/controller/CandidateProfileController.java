@@ -2,6 +2,7 @@ package api.techhatch.com.controller;
 
 import api.techhatch.com.dto.request.CandidateProfileRequest;
 import api.techhatch.com.dto.response.CandidateProfileResponse;
+import api.techhatch.com.exception.ResourceNotFoundException;
 import api.techhatch.com.model.UserPrinciple;
 import api.techhatch.com.service.CandidateProfileService;
 import jakarta.validation.Valid;
