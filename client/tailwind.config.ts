@@ -89,38 +89,61 @@ export default {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
   		},
-  		fontFamily: {
-  			sans: [
-  				'Roboto',
-  				'ui-sans-serif',
-  				'system-ui',
-  				'sans-serif',
-  				'Apple Color Emoji',
-  				'Segoe UI Emoji',
-  				'Segoe UI Symbol',
-  				'Noto Color Emoji'
-  			],
-  			serif: [
-  				'Libre Caslon Text',
-  				'ui-serif',
-  				'Georgia',
-  				'Cambria',
-  				'Times New Roman',
-  				'Times',
-  				'serif'
-  			],
-  			mono: [
-  				'Roboto Mono',
-  				'ui-monospace',
-  				'SFMono-Regular',
-  				'Menlo',
-  				'Monaco',
-  				'Consolas',
-  				'Liberation Mono',
-  				'Courier New',
-  				'monospace'
-  			]
-  		}
+		fontFamily: {
+			sans: [
+				'Roboto',
+				'ui-sans-serif',
+				'system-ui',
+				'sans-serif',
+				'Apple Color Emoji',
+				'Segoe UI Emoji',
+				'Segoe UI Symbol',
+				'Noto Color Emoji'
+			],
+			serif: [
+				'Libre Caslon Text',
+				'ui-serif',
+				'Georgia',
+				'Cambria',
+				'Times New Roman',
+				'Times',
+				'serif'
+			],
+			mono: [
+				'Roboto Mono',
+				'ui-monospace',
+				'SFMono-Regular',
+				'Menlo',
+				'Monaco',
+				'Consolas',
+				'Liberation Mono',
+				'Courier New',
+				'monospace'
+			],
+			// Typography system fonts
+			body: ['"Plus Jakarta Sans"', 'sans-serif'],
+			heading: ['Hahmlet', 'serif']
+		},
+		fontSize: {
+			// Typography system font sizes
+			body: '16px',
+			subHeading: '20px',
+			heading: '24px'
+		},
+		fontWeight: {
+			// Typography system font weights
+			// Note: Using bodyNormal instead of body to avoid conflict with fontFamily.body
+			bodyNormal: '400',
+			bodyMedium: '500',
+			bodySemibold: '600',
+			bodyBold: '700',
+			headingWeight: '700'
+		},
+		lineHeight: {
+			// Typography system line heights
+			body: '1.5',
+			heading: '1.25'
+		}
   	}
   },
   plugins: [require("tailwindcss-animate")],

@@ -1,0 +1,32 @@
+/* 
+ * Global Font Registration
+ * This file only registers fonts - no usage rules should be defined here.
+ * Font usage is defined in Tailwind config and applied via utility classes.
+ */
+
+/* Plus Jakarta Sans - Body and UI text (Variable Font) */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('../assets/fonts/PlusJakartaSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('../assets/fonts/PlusJakartaSans-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Hahmlet - Headings (Variable Font) */
+@font-face {
+  font-family: 'Hahmlet';
+  src: url('../assets/fonts/Hahmlet-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
