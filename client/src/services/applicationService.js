@@ -1,4 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
 import api from './api';
+import { APPLICATION_QUERY_KEYS } from '../utils/constants';
 
 export const applicationService = {
   applyToJob: async (jobId, coverLetter) => {
@@ -9,10 +11,15 @@ export const applicationService = {
     return response.data;
   },
 
-  getMyApplications: async () => {
-    const response = await api.get('/api/v1/applications/my-applications'
+  getMyApplications: async (page=0) => {
+    const response = await api.get('/api/v1/applications/my-applications',
+      {
+        params: {
+          page: page
+        }
+      }
     );
-    return response.data.content;
+    return response.data;
   },
 
   getApplicationsForJob: async (jobId, params) => {
@@ -27,4 +34,13 @@ export const applicationService = {
     });
     return response.data;
   },
+  
+  useMyApplicationsQuery: (page) => {
+    return useQuery({
+      queryKey: APPLICATION_QUERY_KEYS.candidateApplications(page),
+      queryFn: () => applicationService.getMyApplications(page),
+      staleTime: 1000 * 60,
+      retry: 0
+    })
+  }
 };

@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { profileService } from '../../services/profileService';
@@ -10,43 +9,20 @@ import { formatDateRelative } from '../../utils/formatters';
 import toast from 'react-hot-toast';
 import { AlertCircle, Briefcase } from 'lucide-react';
 import { Skeleton } from '../../components/ui/skeleton';
+import ErrorState from '../../components/common/ErrorState'
 
 const CandidateDashboard = () => {
   const { user } = useAuth();
-  const [profile, setProfile] = useState(null);
-  const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
+  
+  const candidateProfileQuery = profileService.useProfileQuery();
+  const myApplicationsQuery = applicationService.useMyApplicationsQuery();
+  
+  const isProfileMissing = 
+    candidateProfileQuery.isError &&
+    candidateProfileQuery.error?.response?.status === 404 &&
+    !candidateProfileQuery.isFetching;
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    let timerId = null;
-    try {
-      const [profileData, applicationsData] = await Promise.all([
-        profileService.getCandidateProfile().catch(() => null),
-        applicationService.getMyApplications(),
-      ]);
-      setProfile(profileData);
-      setApplications(applicationsData);
-    } catch (error) {
-      toast.error('Failed to load dashboard data');
-    } finally {
-        clearTimeout(timerId);
-        timerId = setTimeout(() => {
-          setLoading(false);
-        },500); 
-    }
-  };
-
-  const stats = {
-    total: applications.length,
-    pending: applications.filter((a) => a.status === 'APPLIED' || a.status === 'UNDER_REVIEW').length,
-    interviews: applications.filter((a) => a.status === 'INTERVIEW').length,
-  };
-
-  if (loading) {
+  if (myApplicationsQuery.isLoading || candidateProfileQuery.isLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -62,6 +38,48 @@ const CandidateDashboard = () => {
       </div>
     );
   }
+  
+  if((candidateProfileQuery.isError || myApplicationsQuery.isError) && !isProfileMissing){
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex min-h-[calc(100vh-80px)] items-center justify-center">
+          <ErrorState
+            title="Something went wrong"
+            description="We couldn't load dashbaord. Please try again."
+            onRetry={
+              async () => {
+                toast.loading("Reconnecting...", { id: "reconnecting" })
+                const results = await Promise.allSettled([
+                  candidateProfileQuery.refetch(),
+                  myApplicationsQuery.refetch(),
+                ])
+
+                const hasError = results.some(
+                  r => r.status === "fulfilled" && r.value.error
+                )
+
+                if (hasError) {
+                  toast.dismiss("reconnecting")
+                } else {
+                  toast.success("We're back again!!", { id: "reconnecting" })
+                }
+              }
+            }
+            retrying={candidateProfileQuery.isFetching}
+          />
+        </div>
+      </div>
+    );
+  }
+  
+  const profile = candidateProfileQuery.data;
+  const applications = myApplicationsQuery.data.content;
+  const stats = {
+    total: myApplicationsQuery.data.totalElements,
+    pending: applications.filter((a) => a.status === 'APPLIED' || a.status === 'UNDER_REVIEW').length,
+    interviews: applications.filter((a) => a.status === 'INTERVIEW').length,
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -74,9 +92,9 @@ const CandidateDashboard = () => {
           <p className="text-muted-foreground">Track your job applications and opportunities</p>
         </div>
 
-        {!profile && (
-          <div className="mb-6 flex items-center gap-3 rounded-lg border border-yellow-600 bg-yellow-50 p-4">
-            <AlertCircle className="h-5 w-5 text-yellow-600" />
+        {isProfileMissing && (
+          <div className="mb-6 flex items-start gap-3 rounded-lg border border-yellow-600 bg-yellow-50 p-4">
+            <AlertCircle className="h-5 w-5 my-1 text-yellow-600" />
             <div className="flex-1">
               <p className="font-medium text-gray-900">Complete your profile</p>
               <p className="text-sm text-gray-700">

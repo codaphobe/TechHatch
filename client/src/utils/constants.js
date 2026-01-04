@@ -51,3 +51,7 @@ export const STATUS_COLORS = {
 export const PROFILE_QUERY_KEYS = {
   candidateProfile: ['candidateProfile'],
 }
+
+export const APPLICATION_QUERY_KEYS = {
+  candidateApplications: (page = 0) => ['candidateApplications', {page}]
+}
