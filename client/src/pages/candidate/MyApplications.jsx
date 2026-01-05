@@ -8,28 +8,16 @@ import { JOB_TYPES } from '../../utils/constants';
 import { Briefcase } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Button } from '../../components/ui/button';
+import ErrorState from '../../components/common/ErrorState'
+import PaginationComponent from '../../components/common/Pagination';
 
 const MyApplications = () => {
-  const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    fetchApplications();
-  }, []);
+  const myApplicationsQuery = applicationService.useMyApplicationsQuery(page);
 
-  const fetchApplications = async () => {
-    try {
-      const data = await applicationService.getMyApplications();
-      setApplications(data);
-    } catch (error) {
-      toast.error('Failed to load applications');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
+  if (myApplicationsQuery.isLoading || myApplicationsQuery.isPaused) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -39,13 +27,42 @@ const MyApplications = () => {
       </div>
     );
   }
+  
+  if(myApplicationsQuery.isError){
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex min-h-[calc(100vh-80px)] items-center justify-center">
+          <ErrorState
+            title="Something went wrong"
+            description="We couldn't load your applications. Please try again."
+            onRetry={
+              async () => {
+                toast.loading("Reconnecting...", { id: "reconnecting" })
+                const result = await myApplicationsQuery.refetch();
+
+                if (result.isError && result.error) {
+                  toast.dismiss("reconnecting")
+                } else {
+                  toast.success("We're back again!!", { id: "reconnecting" })
+                }
+              }
+            }
+            retrying={myApplicationsQuery.isFetching}
+          />
+        </div>
+      </div>
+    );
+  }
+  
+  const applications = myApplicationsQuery.data.content;
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
       <div className="container mx-auto px-6 py-8">
-        <div className="mb-6">
+        <div>
         <Button
           variant="outline"
           onClick={() => navigate(`/candidate/dashboard`)}
@@ -56,7 +73,7 @@ const MyApplications = () => {
         </div>
       </div>
       
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 ">
         <h1 className="mb-8 text-3xl font-bold text-foreground">My Applications</h1>
 
         {applications.length === 0 ? (
@@ -115,6 +132,13 @@ const MyApplications = () => {
                 </div>
               </div>
             ))}
+            <div className="py-6">
+              <PaginationComponent 
+                page={page}
+                totalPages={myApplicationsQuery.data.totalPages ?? 1}
+                onPageChange={setPage}
+              />
+            </div>
           </div>
         )}
       </div>

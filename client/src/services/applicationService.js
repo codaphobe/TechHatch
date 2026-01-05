@@ -35,12 +35,13 @@ export const applicationService = {
     return response.data;
   },
   
-  useMyApplicationsQuery: (page) => {
+  useMyApplicationsQuery: (page = 0) => {
     return useQuery({
-      queryKey: APPLICATION_QUERY_KEYS.candidateApplications(page),
-      queryFn: () => applicationService.getMyApplications(page),
+      queryKey: APPLICATION_QUERY_KEYS.candidateApplications(Math.max(0, page-1)),
+      queryFn: () => applicationService.getMyApplications(Math.max(0, page-1)),
       staleTime: 1000 * 60,
-      retry: 0
+      retry: 0,
+      placeholderData: (prev) => prev,
     })
   }
 };
