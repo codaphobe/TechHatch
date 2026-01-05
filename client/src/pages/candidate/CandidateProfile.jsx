@@ -33,9 +33,6 @@ const CandidateProfile = () => {
 
   const candidateProfile = profileService.useProfileQuery();
   const updateCandidateProfile = profileService.useUpdateProfileMutation();
-  const isProfileMissing = 
-    (candidateProfile.isError && 
-    candidateProfile.error?.response?.status === 404) || candidateProfile.data==null;
   
   //Setting the form for the first time only
   //This prevents any background query refetch from undoing
@@ -104,7 +101,7 @@ const CandidateProfile = () => {
       );
   };
 
-  if (candidateProfile.isLoading) {
+  if (candidateProfile.isLoading || candidateProfile.isPaused) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -130,6 +127,10 @@ const CandidateProfile = () => {
       </div>
     );
   }
+  
+  const isProfileMissing = 
+    (candidateProfile.isError &&
+    candidateProfile.error?.response?.status === 404);
 
   return (
     <div className="min-h-screen bg-background">
